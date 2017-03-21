@@ -2,6 +2,8 @@ WordPress Helpers
 ==================
 Odds and sods that are useful on most projects.
 
+This library is in development and I may introduce breaking changes.
+
 ~~~php
 // Within theme
 /**
