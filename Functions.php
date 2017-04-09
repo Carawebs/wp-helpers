@@ -89,12 +89,15 @@ class Functions {
         add_filter( 'nav_menu_item_id', '__return_null' );
     }
 
+    /**
+     * Amend menu CSS.
+     *
+     * Remove the id="" on nav menu items. Return 'menu-slug' for nav menu classes.
+     * Better naming of active element CSS class.
+     * @return void
+     */
     public function nav_classes()
     {
-        /**
-        * Remove the id="" on nav menu items
-        * Return 'menu-slug' for nav menu classes
-        */
         add_filter( 'nav_menu_css_class', function($classes, $item) {
             $slug = sanitize_title($item->title);
             $classes = preg_replace('/(current(-menu-|[-_]page[-_])(item|parent|ancestor))/', 'active', $classes);
@@ -189,19 +192,39 @@ class Functions {
         }, 0 );
     }
 
+    /**
+     * Amend menu classes for roots/soil menu to denote parent for Custom Post Types.
+     *
+     * This is useful if your CPT "Archive" is actually a 'page' with a custom loop
+     * embedded. You must define two filters for this to work:
+     * - 'carawebs/amend-menu-cpts-target-cpts'
+     * - 'carawebs/amend-menu-cpts-target-locations'
+     * See the readme of this package for more information.
+     *
+     * @TODO Allow custom menus in widgets to be targeted - these don't have a
+     * theme location.
+     *
+     * @return void
+     */
     public function soil_cpt_menu_classes() {
-        $cpts = apply_filters( 'carawebs/themehelper_menu_cpts', [] );
-        if ( empty( $cpts ) ) return;
-        foreach ($cpts as $cpt_slug => $menu_item ) {
-            add_filter( 'nav_menu_css_class', function( $classes, $item ) use ($cpt_slug, $menu_item) {
+        $cpts = apply_filters('carawebs/amend-menu-cpts-target-cpts', []);
+        $targetMenuLocations = apply_filters('carawebs/amend-menu-cpts-target-locations', []);
 
-                if ( is_singular($cpt_slug) ) {
-                    // remove unwanted active class if it's found
+        if (empty($cpts)) return;
+        foreach ($cpts as $cpt_slug => $menu_item) {
+            add_filter('nav_menu_css_class', function($classes, $item, $args) use ($cpt_slug, $menu_item, $targetMenuLocations) {
+                // Specify the menu to target
+                if (!in_array($args->theme_location, $targetMenuLocations)) {
+                    return $classes;
+                }
+
+                // On single CPT remove active class, amend specified parent as active.
+                if (is_singular($cpt_slug)) {
                     $classes = str_replace( 'active', '', $classes );
                     $classes = str_replace( 'menu-'.$menu_item['class'], 'menu-'.$menu_item['class'].' active', $classes );
                 }
                 return $classes;
-            }, 100, 2 );
+            }, 100, 3 );
         }
     }
 
