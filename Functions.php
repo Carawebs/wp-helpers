@@ -34,6 +34,7 @@ class Functions {
             'soil_cpt_menu_classes'        => true,
             'bs4_menu_classes'             => true,
             'title_case_archive_titles'    => true,
+            'extra_editor_privileges' => false,
         ];
         $this->args = array_merge( $defaults, $args );
     }
@@ -90,12 +91,12 @@ class Functions {
     }
 
     /**
-     * Amend menu CSS.
-     *
-     * Remove the id="" on nav menu items. Return 'menu-slug' for nav menu classes.
-     * Better naming of active element CSS class.
-     * @return void
-     */
+    * Amend menu CSS.
+    *
+    * Remove the id="" on nav menu items. Return 'menu-slug' for nav menu classes.
+    * Better naming of active element CSS class.
+    * @return void
+    */
     public function nav_classes()
     {
         add_filter( 'nav_menu_css_class', function($classes, $item) {
@@ -193,19 +194,19 @@ class Functions {
     }
 
     /**
-     * Amend menu classes for roots/soil menu to denote parent for Custom Post Types.
-     *
-     * This is useful if your CPT "Archive" is actually a 'page' with a custom loop
-     * embedded. You must define two filters for this to work:
-     * - 'carawebs/amend-menu-cpts-target-cpts'
-     * - 'carawebs/amend-menu-cpts-target-locations'
-     * See the readme of this package for more information.
-     *
-     * @TODO Allow custom menus in widgets to be targeted - these don't have a
-     * theme location.
-     *
-     * @return void
-     */
+    * Amend menu classes for roots/soil menu to denote parent for Custom Post Types.
+    *
+    * This is useful if your CPT "Archive" is actually a 'page' with a custom loop
+    * embedded. You must define two filters for this to work:
+    * - 'carawebs/amend-menu-cpts-target-cpts'
+    * - 'carawebs/amend-menu-cpts-target-locations'
+    * See the readme of this package for more information.
+    *
+    * @TODO Allow custom menus in widgets to be targeted - these don't have a
+    * theme location.
+    *
+    * @return void
+    */
     public function soil_cpt_menu_classes() {
         $cpts = apply_filters('carawebs/amend-menu-cpts-target-cpts', []);
         $targetMenuLocations = apply_filters('carawebs/amend-menu-cpts-target-locations', []);
@@ -251,6 +252,17 @@ class Functions {
     public function title_case_archive_titles() {
         add_filter( 'get_the_archive_title', function( $title ) {
             return ucwords($title);
+        });
+    }
+
+    public function extra_editor_privileges()
+    {
+        add_filter( 'user_has_cap', function($caps) {
+
+            if( ! empty( $caps[ 'edit_pages' ] ) ) {
+                $caps[ 'edit_theme_options' ] = true;
+            }
+            return $caps;
         });
     }
 }
