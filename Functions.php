@@ -25,15 +25,15 @@ class Functions {
     */
     public function set_args( $args ) {
         $defaults = [
-            'kill_emojis'                  => true,
-            'remove_comments'              => true,
-            'page_excerpts'                => true,
-            'blog_page_content'            => true,
-            'setup_nav'                    => true,
-            'nav_classes'                  => true,
-            'soil_cpt_menu_classes'        => true,
-            'bs4_menu_classes'             => true,
-            'title_case_archive_titles'    => true,
+            'kill_emojis' => true,
+            'remove_comments' => true,
+            'page_excerpts' => true,
+            'blog_page_content' => true,
+            'setup_nav' => true,
+            'nav_classes' => true,
+            'soil_cpt_menu_classes' => true,
+            'bs4_menu_classes' => true,
+            'title_case_archive_titles' => true,
             'extra_editor_privileges' => false,
         ];
         $this->args = array_merge( $defaults, $args );
@@ -255,12 +255,15 @@ class Functions {
         });
     }
 
+    /**
+     * Allow editors to control widgets and menus.
+     * @return array Capabilities
+     */
     public function extra_editor_privileges()
     {
-        add_filter( 'user_has_cap', function($caps) {
-
-            if( ! empty( $caps[ 'edit_pages' ] ) ) {
-                $caps[ 'edit_theme_options' ] = true;
+        add_filter('user_has_cap', function($caps) {
+            if(!empty( $caps['edit_pages'])) {
+                $caps['edit_theme_options'] = true;
             }
             return $caps;
         });
