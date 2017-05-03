@@ -11,19 +11,17 @@ namespace Carawebs\Helpers;
 */
 class Functions {
 
-    public function __construct( array $args = [] ) {
-        $this->set_args( $args );
+    public function __construct() {
+        $this->set_args();
         $this->execute_methods();
     }
 
     /**
     * Set arguments - these determine which methods will run.
     *
-    * Arguments passed in will override the defaults.
-    *
-    * @param array $args Array of arguments in the format {method_name}=>boolean
+    * Defaults can be overridden by means of 'carawebs/wp-helpers-functions' filter.
     */
-    public function set_args( $args ) {
+    public function set_args() {
         $defaults = [
             'kill_emojis' => true,
             'remove_comments' => true,
@@ -36,7 +34,7 @@ class Functions {
             'title_case_archive_titles' => true,
             'extra_editor_privileges' => false,
         ];
-        $this->args = array_merge( $defaults, $args );
+        $this->args = apply_filters( 'carawebs/wp-helpers-functions', $defaults );
     }
 
     /**
