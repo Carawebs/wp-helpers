@@ -10,8 +10,8 @@ class Excerpt {
     * @param  [type] $words [description]
     * @return [type]        [description]
     */
-    public static function content( $post_ID, $word_count = NULL ) {
-
+    public static function content( $post_ID, $word_count = NULL )
+    {
         $post_object = get_post( $post_ID );
 
         // Modify get_the_content with the filters attached to the_content - so html tags are maintained
@@ -41,8 +41,8 @@ class Excerpt {
     * @param  string|int $word_count Number of words to display
     * @return string                 Excerpt
     */
-    public static function excerpt_or_content( $post_ID, $word_count = NULL ) {
-
+    public static function excerpt_or_content( $post_ID, $word_count = NULL )
+    {
         $post_object = get_post( $post_ID );
 
         $excerpt = ! empty ( $post_object->post_excerpt )
@@ -74,7 +74,5 @@ class Excerpt {
             : $stripped_limited_content;
 
         return $stripped_limited_content;
-
     }
-
 }
