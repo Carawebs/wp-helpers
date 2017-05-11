@@ -10,9 +10,9 @@ class Excerpt {
     * @param  [type] $words [description]
     * @return [type]        [description]
     */
-    public static function content( $post_ID, $word_count = NULL )
+    public static function content( $post, $word_count = NULL )
     {
-        $post_object = get_post( $post_ID );
+        $post_object = !is_object($post) ? get_post( $post ) : $post;
 
         // Modify get_the_content with the filters attached to the_content - so html tags are maintained
         $content = apply_filters( 'the_content', $post_object->post_content );
@@ -28,7 +28,32 @@ class Excerpt {
         $stripped_limited_content = strip_tags( $limited_content, '<p>' ) . "&hellip;";
 
         return $stripped_limited_content;
+    }
 
+    public static function customExcerpt($wordCount = 25, $postID = NULL)
+    {
+        $postID = !empty($postID) ? $postID : get_the_ID();
+        $postObject = get_post( $postID );
+
+        $excerpt = ! empty ( $postObject->post_excerpt )
+            ? $postObject->post_excerpt
+            : self::rawContent($postObject, $wordCount);
+
+        return $excerpt;
+    }
+
+    public static function rawContent( $post, $wordCount = NULL )
+    {
+        $post_object = !is_object($post) ? get_post($post) : $post;
+
+        // Modify get_the_content with the filters attached to the_content - so html tags are maintained
+        $content = $post_object->post_content;
+        // Split $content into an array of strings, seperator is a space, so it's an array of words
+        $words = explode( " ", $content );
+        // Rebuild the array of words into a string, seperated by spaces.
+        $limited_content = implode( " ", array_splice( $words, 0, $wordCount ) );
+
+        return $limited_content . "&hellip;";
     }
 
     /**
@@ -70,8 +95,8 @@ class Excerpt {
         // If using the manual excerpt, it's up to the editor to not
         // exceed the word limit.
         $stripped_limited_content = empty ( $post_object->post_excerpt )
-            ? $stripped_limited_content . "&hellip;"
-            : $stripped_limited_content;
+        ? $stripped_limited_content . "&hellip;"
+        : $stripped_limited_content;
 
         return $stripped_limited_content;
     }
