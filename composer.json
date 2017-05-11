@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Carawebs\\Helpers\\": ""
+            "Carawebs\\Helpers\\": "src"
         }
     },
     "require": {}
