@@ -103,13 +103,13 @@ class Functions {
             $classes = preg_replace('/^((menu|page)[-_\w+]+)+/', '', $classes);
             $classes[] = 'menu-' . $slug;
             $classes = array_unique($classes);
-            error_log(print_r($classes, true));
+            //error_log(print_r($classes, true));
             $filteredClasses = [];
             foreach ($classes as $class) {
                 if (empty($class)) continue;
                 $filteredClasses[] = trim($class);
             }
-            error_log(print_r($filteredClasses, true));
+            //error_log(print_r($filteredClasses, true));
             return $filteredClasses;
         }, 10, 2 );
     }
