@@ -2,7 +2,7 @@
     "name": "carawebs/wp-helpers",
     "description": "This package provides Wordpress housekeeping & helper functions.",
     "type": "library",
-    "license": "GNU",
+    "license": "GPL-3.0-only",
     "authors": [
         {
             "name": "David Egan",
